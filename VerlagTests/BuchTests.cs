@@ -1,4 +1,5 @@
 using System;
+using System.Security.AccessControl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Verlag;
 
@@ -28,6 +29,7 @@ namespace VerlagTests
 		public void Buch_KeineAuflageEntsprichtErsterAuflage()
 		{
 			//Arrange
+
 
 			//Act 
 			Buch b = new Buch("autor", "titel");
@@ -77,6 +79,10 @@ namespace VerlagTests
 
 			//Act
 			Buch b = new Buch("autor", "titel", auflage);
+
+			//Assert
+
+			Assert.AreEqual(1, b.Auflage);
 		}
 
 		[TestMethod]
@@ -89,21 +95,43 @@ namespace VerlagTests
 
 			//Act
 			b.Auflage = auflageNeu;
-		}
 
-		// DataRow: https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-mstest#add-more-features
-		[TestMethod]
-		[DataRow("")]
-		[DataRow("#")]
-		[DataRow(";")]
-		[DataRow("§")]
-		[DataRow("%")]
-		[DataRow(null)]
+            //Assert
+            Assert.AreEqual(1, b.Auflage);
+
+        }
+
+        // DataRow: https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-mstest#add-more-features
+        [TestMethod]
+		[DataRow('')]
+		[DataRow('#')]
+		[DataRow(';')]
+		[DataRow('$')]
+		[DataRow('%')]
 		[ExpectedException(typeof(ArgumentException))]
-		public void Autor_NurSinnvolleEingabenErlaubt(string unerlaubtesZeichen)
+		public void Autor_NurSinnvolleEingabenErlaubt(char unerlaubtesZeichen)
 		{
+			//Arrange
+
 			//Act
 			Buch b = new Buch(unerlaubtesZeichen, "titel");
-		}
-	}
+
+            //Assert
+
+        }
+        [TestMethod]
+        [DataRow(null)]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Autor_NurSinnvolleEingabenErlaubt1()
+        {
+            //Arrange
+
+            //Act
+            Buch b = new Buch(null, "titel");
+
+			//Assert
+
+        }
+
+    }
 }
